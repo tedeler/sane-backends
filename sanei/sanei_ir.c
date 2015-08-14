@@ -552,8 +552,10 @@ sanei_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
   else
     {
       status = sanei_ir_ln_table (len, &llut);
-      if (status != SANE_STATUS_GOOD)
+      if (status != SANE_STATUS_GOOD) {
+        free (calc_buf);
         return status;
+      }
     }
 
   /* determine not transparent areas to exclude them later
@@ -565,6 +567,7 @@ sanei_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
   if (status != SANE_STATUS_GOOD)
     {
       DBG (5, "sanei_ir_spectral_clean: no buffer\n");
+      free (calc_buf);
       return SANE_STATUS_NO_MEM;
     }
 
@@ -758,7 +761,7 @@ sanei_ir_filter_mean (const SANE_Parameters * params,
 	      *dest++ = the_sum / (ncol * nrow);
 	    }
 	}
-    
+  free (sum);
   return SANE_STATUS_GOOD;
 }
 

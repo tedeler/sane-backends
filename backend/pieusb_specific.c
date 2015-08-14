@@ -1333,8 +1333,10 @@ sanei_pieusb_post (Pieusb_Scanner *scanner, uint16_t **in_img, int planes)
        * and add the dirt from the static threshold */
       /* last two parameters: 10, 50 detects more, 20, 75 less */
       status = sanei_ir_filter_madmean (&parameters, cplane[3], &thresh_data, winsize_filter, 20, 100);
-      if (status != SANE_STATUS_GOOD)
+      if (status != SANE_STATUS_GOOD) {
+        free (thresh_data);
         return status;
+      }
       sanei_ir_add_threshold (&parameters, cplane[3], thresh_data, static_thresh);
       if (DBG_LEVEL >= 15)
         {
@@ -1343,15 +1345,18 @@ sanei_pieusb_post (Pieusb_Scanner *scanner, uint16_t **in_img, int planes)
                                   8, 1, parameters.pixels_per_line,
                                   parameters.lines);
         }
-      if (scanner->cancel_request)          /* asynchronous cancel ? */
+      if (scanner->cancel_request) {         /* asynchronous cancel ? */
+        free (thresh_data);
         return SANE_STATUS_CANCELLED;
-
+      }
       /* replace the dirt and smoothen film grain and crop if possible */
       status = sanei_ir_dilate_mean (&parameters, cplane, thresh_data,
               500, size_dilate, winsize_smooth, smooth,
               0, NULL);
-      if (status != SANE_STATUS_GOOD)
+      if (status != SANE_STATUS_GOOD) {
+        free (thresh_data);
         return status;
+      }
       smooth = 0;
       free (thresh_data);
     }
