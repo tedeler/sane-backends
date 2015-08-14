@@ -2,7 +2,7 @@
 
    pieusb_scancmd.c
 
-   Copyright (C) 2012 Jan Vleeshouwers, Michael Rickmann, Klaus Kaempf
+   Copyright (C) 2012-2015 Jan Vleeshouwers, Michael Rickmann, Klaus Kaempf
 
    This file is part of the SANE package.
 
