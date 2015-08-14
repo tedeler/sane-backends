@@ -12,7 +12,7 @@
  * - 2) find the dirt
  * - 3) replace the dirt
  *
- * - 1) is mainly adressed by sane_ir_spectral_clean
+ * - 1) is mainly adressed by sanei_ir_spectral_clean
  * - 2) by sanei_ir_filter_madmean
  * - 3) by sanei_ir_dilate_mean
  */
@@ -156,7 +156,7 @@ sanei_ir_threshold_maxentropy (const SANE_Parameters * params,
  *       on output params are updated if image depth is scaled
  */
 SANE_Status
-sane_ir_RGB_luminance (SANE_Parameters * params, const SANE_Uint **in_img,
+sanei_ir_RGB_luminance (SANE_Parameters * params, const SANE_Uint **in_img,
                        SANE_Uint **out_img);
 
 /**
@@ -178,7 +178,7 @@ sane_ir_RGB_luminance (SANE_Parameters * params, const SANE_Uint **in_img,
  */
 
 extern SANE_Status
-sane_ir_to_8bit (SANE_Parameters * params, const SANE_Uint *in_img,
+sanei_ir_to_8bit (SANE_Parameters * params, const SANE_Uint *in_img,
                  SANE_Parameters * out_params, SANE_Uint **out_img);
 
 /** 
@@ -193,7 +193,7 @@ sane_ir_to_8bit (SANE_Parameters * params, const SANE_Uint *in_img,
  *
  * @note natural logarithms are provided
  */
-SANE_Status sane_ir_ln_table (int len, double **lut_ln);
+SANE_Status sanei_ir_ln_table (int len, double **lut_ln);
 
 /**
  * @brief Reduces red spectral overlap from an infrared image plane
@@ -220,7 +220,7 @@ SANE_Status sane_ir_ln_table (int len, double **lut_ln);
  * @note original ired data are replaced by the cleaned ones
 */
 extern SANE_Status
-sane_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
+sanei_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
 			const SANE_Uint *red_data,
 			SANE_Uint *ir_data);
 
@@ -320,7 +320,7 @@ sanei_ir_add_threshold (const SANE_Parameters * params,
  *      http://ostermiller.org/dilate_and_erode.html
  */
 void
-sane_ir_manhattan_dist (const SANE_Parameters * params,
+sanei_ir_manhattan_dist (const SANE_Parameters * params,
 			const SANE_Uint * mask_img, unsigned int *dist_map,
 			unsigned int *idx_map, unsigned int erode);
 
@@ -337,7 +337,7 @@ sane_ir_manhattan_dist (const SANE_Parameters * params,
  * @note by > 0 will enlarge the 0 valued area
  */
 void
-sane_ir_dilate (const SANE_Parameters * params, SANE_Uint * mask_img,
+sanei_ir_dilate (const SANE_Parameters * params, SANE_Uint * mask_img,
 		unsigned int *dist_map, unsigned int *idx_map, int by);
 
 /**
@@ -349,7 +349,7 @@ sane_ir_dilate (const SANE_Parameters * params, SANE_Uint * mask_img,
  * @param[out] edges pointer to array holding top, bottom, left
  *             and right edges
  *
- * The distance map as calculated by sane_ir_manhattan_dist contains
+ * The distance map as calculated by sanei_ir_manhattan_dist contains
  * distances to the next clean pixel. Dark margins are detected as dirt.
  * So the first/last rows/columns tell us how to crop. This is rather
  * fast if the distance map has been calculated anyhow.

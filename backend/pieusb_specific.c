@@ -1279,7 +1279,7 @@ sanei_pieusb_post (Pieusb_Scanner *scanner, uint16_t **in_img, int planes)
   if (scanner->val[OPT_CORRECT_INFRARED].b) /* (scanner->processing & POST_SW_IRED_MASK) */
     {
       /* remove spectral overlay from ired plane */
-      status = sane_ir_spectral_clean (&parameters, scanner->ln_lut, cplane[0], cplane[3]);
+      status = sanei_ir_spectral_clean (&parameters, scanner->ln_lut, cplane[0], cplane[3]);
       if (status != SANE_STATUS_GOOD)
         return status;
       if (DBG_LEVEL >= 15)

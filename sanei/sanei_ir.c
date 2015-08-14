@@ -414,7 +414,7 @@ sanei_ir_threshold_maxentropy (const SANE_Parameters * params,
 /* Generate gray scale luminance image from separate R, G, B images
  */
 SANE_Status
-sane_ir_RGB_luminance (SANE_Parameters * params, const SANE_Uint **in_img,
+sanei_ir_RGB_luminance (SANE_Parameters * params, const SANE_Uint **in_img,
                       SANE_Uint **out_img)
 {
   SANE_Uint *outi, *dest;
@@ -423,7 +423,7 @@ sane_ir_RGB_luminance (SANE_Parameters * params, const SANE_Uint **in_img,
   if ((params->depth < 8) || (params->depth > 16) ||
       (params->format != SANE_FRAME_GRAY))
     {
-      DBG (5, "sane_ir_RGB_luminance: invalid format\n");
+      DBG (5, "sanei_ir_RGB_luminance: invalid format\n");
       return SANE_STATUS_UNSUPPORTED;
     }
 
@@ -431,7 +431,7 @@ sane_ir_RGB_luminance (SANE_Parameters * params, const SANE_Uint **in_img,
   outi = malloc (itop * sizeof(SANE_Uint));
   if (!outi)
     {
-      DBG (5, "sane_ir_RGB_luminance: can not allocate out_img\n");
+      DBG (5, "sanei_ir_RGB_luminance: can not allocate out_img\n");
       return SANE_STATUS_NO_MEM;
     }
 
@@ -446,7 +446,7 @@ sane_ir_RGB_luminance (SANE_Parameters * params, const SANE_Uint **in_img,
 /* Convert image from >8 bit depth to an 8 bit image
  */
 SANE_Status
-sane_ir_to_8bit (SANE_Parameters * params, const SANE_Uint *in_img,
+sanei_ir_to_8bit (SANE_Parameters * params, const SANE_Uint *in_img,
                  SANE_Parameters * out_params, SANE_Uint **out_img)
 {
   SANE_Uint *outi, *src, *dest;
@@ -455,7 +455,7 @@ sane_ir_to_8bit (SANE_Parameters * params, const SANE_Uint *in_img,
 
   if ((params->depth < 8) || (params->depth > 16))
     {
-      DBG (5, "sane_ir_to_8bit: invalid format\n");
+      DBG (5, "sanei_ir_to_8bit: invalid format\n");
       return SANE_STATUS_UNSUPPORTED;
     }
   ssize = params->pixels_per_line * params->lines;
@@ -464,7 +464,7 @@ sane_ir_to_8bit (SANE_Parameters * params, const SANE_Uint *in_img,
   outi = malloc (ssize * sizeof(SANE_Uint));
   if (!outi)
     {
-      DBG (5, "sane_ir_to_8bit: can not allocate out_img\n");
+      DBG (5, "sanei_ir_to_8bit: can not allocate out_img\n");
       return SANE_STATUS_NO_MEM;
     }
 
@@ -490,17 +490,17 @@ sane_ir_to_8bit (SANE_Parameters * params, const SANE_Uint *in_img,
 /* allocate and initialize logarithmic lookup table
  */
 SANE_Status
-sane_ir_ln_table (int len, double **lut_ln)
+sanei_ir_ln_table (int len, double **lut_ln)
 {
   double *llut;
   int i;
 
-  DBG (10, "sane_ir_ln_table\n");
+  DBG (10, "sanei_ir_ln_table\n");
 
   llut = malloc (len * sizeof (double));
   if (!llut)
     {
-      DBG (5, "sane_ir_ln_table: no table\n");
+      DBG (5, "sanei_ir_ln_table: no table\n");
       return SANE_STATUS_NO_MEM;
     }
   llut[0] = 0;
@@ -516,7 +516,7 @@ sane_ir_ln_table (int len, double **lut_ln)
 /* Reduce red spectral overlap from an infrared image plane
  */
 SANE_Status
-sane_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
+sanei_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
 			const SANE_Uint *red_data,
 			SANE_Uint *ir_data)
 {
@@ -535,13 +535,13 @@ sane_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
   int irand, i;
   SANE_Status status;
 
-  DBG (10, "sane_ir_spectral_clean\n");
+  DBG (10, "sanei_ir_spectral_clean\n");
 
   itop = params->pixels_per_line * params->lines;
   calc_buf = malloc (itop * sizeof (int));		/* could save this */
   if (!calc_buf)
     {
-      DBG (5, "sane_ir_spectral_clean: no buffer\n");
+      DBG (5, "sanei_ir_spectral_clean: no buffer\n");
       return SANE_STATUS_NO_MEM;
     }
 
@@ -551,7 +551,7 @@ sane_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
     llut = lut_ln;
   else
     {
-      status = sane_ir_ln_table (len, &llut);
+      status = sanei_ir_ln_table (len, &llut);
       if (status != SANE_STATUS_GOOD)
         return status;
     }
@@ -564,7 +564,7 @@ sane_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
       sanei_ir_create_norm_histogram (params, ir_data, &norm_histo);
   if (status != SANE_STATUS_GOOD)
     {
-      DBG (5, "sane_ir_spectral_clean: no buffer\n");
+      DBG (5, "sanei_ir_spectral_clean: no buffer\n");
       return SANE_STATUS_NO_MEM;
     }
 
@@ -582,7 +582,7 @@ sane_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
     thresh_low = 0;
   else
     thresh_low /= 2;
-  DBG (10, "sane_ir_spectral_clean: low threshold %d\n", thresh_low);
+  DBG (10, "sanei_ir_spectral_clean: low threshold %d\n", thresh_low);
 
   /* calculate linear regression ired (red) from randomly chosen points */
   ssize = itop / 2;
@@ -612,7 +612,7 @@ sane_ir_spectral_clean (const SANE_Parameters * params, double *lut_ln,
     rsum * (double) isum) / ((double) ssize * rrsum - rsum * rsum);
     radd = ((double) isum - rfac * rsum) / (double) ssize;      /* "b" unused */
 
-  DBG (10, "sane_ir_spectral_clean: n = %d, ired(red) = %f * ln(red) + %f\n",
+  DBG (10, "sanei_ir_spectral_clean: n = %d, ired(red) = %f * ln(red) + %f\n",
             ssize, rfac, radd);
 
   /* now calculate ired' = ired - a  * ln (red) */
@@ -881,7 +881,7 @@ sanei_ir_add_threshold (const SANE_Parameters * params,
 /* Calculate minimal Manhattan distances for an image mask
  */
 void
-sane_ir_manhattan_dist (const SANE_Parameters * params,
+sanei_ir_manhattan_dist (const SANE_Parameters * params,
 			const SANE_Uint * mask_img, unsigned int *dist_map,
 			unsigned int *idx_map, unsigned int erode)
 {
@@ -890,7 +890,7 @@ sane_ir_manhattan_dist (const SANE_Parameters * params,
   int rows, cols, itop;
   int i, j;
 
-  DBG (10, "sane_ir_manhattan_dist\n");
+  DBG (10, "sanei_ir_manhattan_dist\n");
 
   if (erode != 0)
     erode = 255;
@@ -987,7 +987,7 @@ sane_ir_manhattan_dist (const SANE_Parameters * params,
 /* dilate or erode a mask image */
 
 void
-sane_ir_dilate (const SANE_Parameters *params, SANE_Uint *mask_img,
+sanei_ir_dilate (const SANE_Parameters *params, SANE_Uint *mask_img,
 		unsigned int *dist_map, unsigned int *idx_map, int by)
 {
   SANE_Uint *mask;
@@ -996,7 +996,7 @@ sane_ir_dilate (const SANE_Parameters *params, SANE_Uint *mask_img,
   unsigned int thresh;
   int i, itop;
 
-  DBG (10, "sane_ir_dilate\n");
+  DBG (10, "sanei_ir_dilate\n");
 
   if (by == 0)
     return;
@@ -1013,7 +1013,7 @@ sane_ir_dilate (const SANE_Parameters *params, SANE_Uint *mask_img,
 
   itop = params->pixels_per_line * params->lines;
   mask = mask_img;
-  sane_ir_manhattan_dist (params, mask_img, dist_map, idx_map, erode);
+  sanei_ir_manhattan_dist (params, mask_img, dist_map, idx_map, erode);
 
   manhattan = dist_map;
   for (i = 0; i < itop; i++)
@@ -1147,9 +1147,9 @@ sanei_ir_dilate_mean (const SANE_Parameters * params,
     {
       /* expand dirty regions into their half dirty surround*/
       if (expand > 0)
-	sane_ir_dilate (params, mask_img, dist_map, idx_map, expand);
+	sanei_ir_dilate (params, mask_img, dist_map, idx_map, expand);
       /* for dirty pixels determine the closest clean ones */
-      sane_ir_manhattan_dist (params, mask_img, dist_map, idx_map, 1);
+      sanei_ir_manhattan_dist (params, mask_img, dist_map, idx_map, 1);
 
       /* use the distance map to find how to crop dark edges */
       if (crop)
