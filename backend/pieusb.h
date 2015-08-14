@@ -86,7 +86,7 @@ extern struct Pieusb_USB_Device_Entry* pieusb_supported_usb_device_list;
 extern struct Pieusb_USB_Device_Entry pieusb_supported_usb_device; /* for searching */
 
 struct Pieusb_Device_Definition;
-extern struct Pieusb_Device_Definition *definition_list_head;
+extern struct Pieusb_Device_Definition *pieusb_definition_list_head;
 
 /* Debug error levels */
 #define DBG_error        1      /* errors */

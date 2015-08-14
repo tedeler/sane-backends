@@ -124,9 +124,9 @@ struct Pieusb_USB_Device_Entry pieusb_supported_usb_device; /* for searching */
  *
  * --------------------------------------------------------------------------*/
 
-Pieusb_Device_Definition *definition_list_head = NULL;
-Pieusb_Scanner *first_handle = NULL;
-const SANE_Device **devlist = NULL;
+Pieusb_Device_Definition *pieusb_definition_list_head = NULL;
+static Pieusb_Scanner *first_handle = NULL;
+static const SANE_Device **devlist = NULL;
 
 /* --------------------------------------------------------------------------
  *
@@ -254,7 +254,7 @@ sane_exit (void)
 
     DBG (DBG_info_sane, "sane_exit()\n");
 
-    for (dev = definition_list_head; dev; dev = next) {
+    for (dev = pieusb_definition_list_head; dev; dev = next) {
         next = dev->next;
         free((void *)dev->sane.name);
         free((void *)dev->sane.vendor);
@@ -262,7 +262,7 @@ sane_exit (void)
         free (dev->version);
         free (dev);
     }
-    definition_list_head = NULL;
+    pieusb_definition_list_head = NULL;
 
     if (devlist) {
         free (devlist);
@@ -287,7 +287,7 @@ sane_get_devices (const SANE_Device *** device_list, SANE_Bool __sane_unused__ l
 
     /* Create SANE_DEVICE list from device list created in sane_init() */
     i = 0;
-    for (dev = definition_list_head; dev; dev = dev->next) {
+    for (dev = pieusb_definition_list_head; dev; dev = dev->next) {
         i++;
     }
     if (devlist) {
@@ -298,7 +298,7 @@ sane_get_devices (const SANE_Device *** device_list, SANE_Bool __sane_unused__ l
         return SANE_STATUS_NO_MEM;
     }
     i = 0;
-    for (dev = definition_list_head; dev; dev = dev->next) {
+    for (dev = pieusb_definition_list_head; dev; dev = dev->next) {
         devlist[i++] = &dev->sane;
     }
     devlist[i] = NULL;
@@ -326,7 +326,7 @@ sane_open (SANE_String_Const devicename, SANE_Handle * handle)
 
     /* Search for devicename */
     if (devicename[0]) {
-        for (dev = definition_list_head; dev; dev = dev->next) {
+        for (dev = pieusb_definition_list_head; dev; dev = dev->next) {
 	  if (strcmp (dev->sane.name, devicename) == 0) {
 	      break;
 	  }
@@ -367,7 +367,7 @@ sane_open (SANE_String_Const devicename, SANE_Handle * handle)
                 i++;
             }
             /* Now rescan the device list to see if it is present */
-            for (dev = definition_list_head; dev; dev = dev->next) {
+            for (dev = pieusb_definition_list_head; dev; dev = dev->next) {
               if (strcmp (dev->sane.name, devicename) == 0) {
                   break;
               }
@@ -375,7 +375,7 @@ sane_open (SANE_String_Const devicename, SANE_Handle * handle)
 	}
     } else {
         /* empty devicename -> use first device */
-        dev = definition_list_head;		
+        dev = pieusb_definition_list_head;		
     }
     /* If no device found, return error */
     if (!dev) {

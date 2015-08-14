@@ -218,7 +218,7 @@ sanei_pieusb_find_device_callback (const char *devicename)
     DBG (DBG_info_proc, "sanei_pieusb_find_device_callback: %s\n", devicename);
 
     /* Check if device is present in the Pieusb device list */
-    for (dev = definition_list_head; dev; dev = dev->next) {
+    for (dev = pieusb_definition_list_head; dev; dev = dev->next) {
         if (strcmp (dev->sane.name, devicename) == 0) {
 	    return SANE_STATUS_GOOD;
         }
@@ -294,8 +294,8 @@ sanei_pieusb_find_device_callback (const char *devicename)
 
     /* Found a supported scanner, put it in the definitions list*/
     DBG (DBG_info_proc, "sanei_pieusb_find_device_callback: success\n");
-    dev->next = definition_list_head;
-    definition_list_head = dev;
+    dev->next = pieusb_definition_list_head;
+    pieusb_definition_list_head = dev;
     return SANE_STATUS_GOOD;
 }
 
