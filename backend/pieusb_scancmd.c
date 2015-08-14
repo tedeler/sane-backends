@@ -959,7 +959,7 @@ sanei_pieusb_cmd_get_ccd_mask(SANE_Int device_number, SANE_Byte* mask, SANE_Int 
  * @see Pieusb_Mode
  */
 void
-cmdGetMode(SANE_Int device_number, struct Pieusb_Mode* mode, struct Pieusb_Command_Status *status)
+sanei_pieusb_cmd_get_mode(SANE_Int device_number, struct Pieusb_Mode* mode, struct Pieusb_Command_Status *status)
 {
     SANE_Byte command[SCSI_COMMAND_LEN];
 #define MODE_SIZE 16
@@ -967,7 +967,7 @@ cmdGetMode(SANE_Int device_number, struct Pieusb_Mode* mode, struct Pieusb_Comma
     SANE_Byte data[MODE_SIZE];
     SANE_Byte quality;
 
-    DBG (DBG_info_scan, "cmdGetMode()\n");
+    DBG (DBG_info_scan, "sanei_pieusb_cmd_get_mode()\n");
 
     _prep_scsi_cmd (command, SCSI_MODE_SENSE, size);
     memset (data, '\0', size);
@@ -1086,14 +1086,14 @@ sanei_pieusb_cmd_stop_scan(SANE_Int device_number, struct Pieusb_Command_Status 
  * @return Pieusb_Command_Status
  */
 void
-cmdSetScanHead(SANE_Int device_number, SANE_Int mode, SANE_Int steps, struct Pieusb_Command_Status *status)
+sanei_pieusb_cmd_set_scan_head(SANE_Int device_number, SANE_Int mode, SANE_Int steps, struct Pieusb_Command_Status *status)
 {
     SANE_Byte command[SCSI_COMMAND_LEN];
 #define SCAN_HEAD_SIZE 4
     SANE_Int size = SCAN_HEAD_SIZE;
     SANE_Byte data[SCAN_HEAD_SIZE];
 
-    DBG (DBG_info_scan, "cmdSetScanHead()\n");
+    DBG (DBG_info_scan, "sanei_pieusb_cmd_set_scan_head()\n");
 
     _prep_scsi_cmd (command, SCSI_SET_SCAN_HEAD, size);
 
@@ -1104,7 +1104,7 @@ cmdSetScanHead(SANE_Int device_number, SANE_Int mode, SANE_Int steps, struct Pie
             data[0] = 2;
             break;
         case 2:
-            DBG (DBG_error, "cmdSetScanHead() mode 2 unreliable, possibly dangerous\n");
+            DBG (DBG_error, "sanei_pieusb_cmd_set_scan_head() mode 2 unreliable, possibly dangerous\n");
             status->pieusb_status = PIEUSB_STATUS_INVAL;
             return;
         case 3:

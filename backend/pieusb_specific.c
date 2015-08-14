@@ -1140,7 +1140,7 @@ sanei_pieusb_on_cancel (Pieusb_Scanner * scanner)
     DBG (DBG_info_proc, "sanei_pieusb_on_cancel()\n");
 
     sanei_pieusb_cmd_stop_scan (scanner->device_number, &status);
-    cmdSetScanHead (scanner->device_number, 1, 0, &status);
+    sanei_pieusb_cmd_set_scan_head (scanner->device_number, 1, 0, &status);
     sanei_pieusb_buffer_delete (&scanner->buffer);
     scanner->scanning = SANE_FALSE;
     return SANE_STATUS_CANCELLED;
