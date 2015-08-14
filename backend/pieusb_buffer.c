@@ -84,7 +84,6 @@
 #include "../include/sane/saneopts.h"
 #include "../include/sane/sanei_usb.h"
 #include "../include/sane/sanei_config.h"
-#include "../include/sane/sanei_thread.h"
 
 /* Backend includes */
 #define BACKEND_NAME pieusb
